@@ -38,8 +38,6 @@ public class PlayerMovement : MonoBehaviour
             transform.localScale = Vector3.one;
         else if (horizontalInput < -0.01f)
             transform.localScale = new Vector3(-1,1,1);
-     
-        
 
         anim.SetBool("run", horizontalInput != 0);
         anim.SetBool("grounded", IsGrounded());
@@ -49,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
            body.linearVelocity = new Vector2(horizontalInput * moveSpeed,
            body.linearVelocity.y);
 
-           if (Onwall() && !IsGrounded()){
+           if (OnWall() && !IsGrounded()){
             body.gravityScale = 0;
             body.linearVelocity = Vector2.zero;
            }
@@ -67,18 +65,16 @@ public class PlayerMovement : MonoBehaviour
              body.linearVelocity = new Vector2(body.linearVelocity.x, jumpForce);
              anim.SetTrigger("jump");
         }
-        else if (Onwall() && !IsGrounded()){
+        else if (OnWall() && !IsGrounded()){
 
             if (horizontalInput == 0){
                 body.linearVelocity = new Vector2(-Mathf.Sign(transform.localScale.x) * 10, 0);
                 transform.localScale = new Vector3(-Mathf.Sign(transform.localScale.x), transform.localScale.y, transform.localScale.z);
-
-
             }
             else 
-             body.linearVelocity = new Vector2(-Mathf.Sign(transform.localScale.x) * 15, 15);
-              wallJumpCooldown = -0;
-            
+             body.linearVelocity = new Vector2(-Mathf.Sign(transform.localScale.x) * 16, 6);
+              wallJumpCooldown = -0;   
+              anim.SetTrigger("jump");  
         }
 
     }
@@ -88,16 +84,13 @@ public class PlayerMovement : MonoBehaviour
         return raycastHit.collider != null;
     }
 
-    private bool Onwall (){
+    private bool OnWall (){
         RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.size, 0, new Vector2(transform.localScale.x, 0), 0.1f, wallLayer);
         return raycastHit.collider != null; 
     }
 
     // Player shooting
     public bool canAttack (){
-        return horizontalInput == 0 && IsGrounded() && !Onwall();
+        return horizontalInput == 0 && IsGrounded() && !OnWall();
     }
-
-
-
 }
