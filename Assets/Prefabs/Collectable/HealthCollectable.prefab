@@ -102,6 +102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthValue: 1
+  collectableSound: {fileID: 8300000, guid: 1822d20ad9bb7d94590b638592084e51, type: 3}
 --- !u!61 &838229273535387467
 BoxCollider2D:
   m_ObjectHideFlags: 0
