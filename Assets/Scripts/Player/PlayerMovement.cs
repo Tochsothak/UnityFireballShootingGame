@@ -1,8 +1,10 @@
+using System;
 using System.Net.Mail;
 using TreeEditor;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -16,8 +18,20 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jumpForce;
-    [SerializeField] private float horizontalInput;
-    [Header("SFX")]
+
+    [Header ("Coyote Time")]
+    [SerializeField]private float coyoteTime; // How much time the player can hang in the air before jumping
+    private float coyoteCounter;
+
+    [Header("Multiple Jump")]
+    [SerializeField] private int extraJumps;
+    private int jumpCounter;
+
+    [Header("Wall Jumping")]
+    [SerializeField]private float wallJumpX;
+    [SerializeField]private float wallJumpY;
+    private float horizontalInput;
+    [Header("Sounds")]
     [SerializeField]private AudioClip jumpSound;
 
     // Grab reference for rigidbody and animator from game object
@@ -43,45 +57,59 @@ public class PlayerMovement : MonoBehaviour
         anim.SetBool("run", horizontalInput != 0);
         anim.SetBool("grounded", IsGrounded());
 
-        //Wall jump logic
-        if (wallJumpCooldown < 0.2f){
-           body.linearVelocity = new Vector2(horizontalInput * moveSpeed,
-           body.linearVelocity.y);
-
-           if (OnWall() && !IsGrounded()){
+        // Jump
+        if(Input.GetKeyDown(KeyCode.Space))
+            Jump();
+        // Adjustable jump height
+        if (Input.GetKeyUp(KeyCode.Space) && body.linearVelocity.y > 0)
+            body.linearVelocity = new Vector2(body.linearVelocity.x, body.linearVelocity.y / 2);
+        
+        if (OnWall()){
             body.gravityScale = 0;
             body.linearVelocity = Vector2.zero;
-           }
-           else body.gravityScale = 7;
-
-           if (Input.GetKey(KeyCode.Space)){
-            Jump();
-            if (Input.GetKeyDown(KeyCode.Space) && IsGrounded()){
-                 SoundManager.instance.PlaySound(jumpSound);
-            }
-           }
         }
-        else wallJumpCooldown += Time.deltaTime;
+        else {
+            body.gravityScale = 7;
+            body.linearVelocity = new Vector2(horizontalInput * moveSpeed, body.linearVelocity.y);
+
+            if (IsGrounded()){
+                coyoteCounter = coyoteTime;
+                jumpCounter = extraJumps; 
+            }
+            else 
+                coyoteCounter -= Time.deltaTime;
+
+        }
+        
     }
 
     private void Jump ( ){
-        if (IsGrounded() ){
-           
-             body.linearVelocity = new Vector2(body.linearVelocity.x, jumpForce);
-             anim.SetTrigger("jump");
-        }
-        else if (OnWall() && !IsGrounded()){
+        if (coyoteCounter <=0 && !OnWall() && jumpCounter <= 0 ) return;
+         SoundManager.instance.PlaySound(jumpSound);
 
-            if (horizontalInput == 0){
-                body.linearVelocity = new Vector2(-Mathf.Sign(transform.localScale.x) * 10, 0);
-                transform.localScale = new Vector3(-Mathf.Sign(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+         if (OnWall())
+            WallJump();
+        else {
+            if (IsGrounded())
+            body.linearVelocity = new Vector2(body.linearVelocity.x, jumpForce);
+            else {
+                if (coyoteCounter > 0)
+                body.linearVelocity = new Vector2(body.linearVelocity.x, jumpForce);
+                else {
+                    if (jumpCounter > 0){
+                        body.linearVelocity = new Vector2(body.linearVelocity.x, jumpForce);
+                        jumpCounter--;
+                    }
+                }
             }
-            else 
-             body.linearVelocity = new Vector2(-Mathf.Sign(transform.localScale.x) * 16, 6);
-              wallJumpCooldown = -0;   
-              anim.SetTrigger("jump");  
+            coyoteCounter = 0;
         }
 
+    }
+
+    private void WallJump(){
+        body.AddForce(new Vector2(-Math.Sign(transform.localScale.x) * wallJumpX, wallJumpY));
+        wallJumpCooldown = 0;
     }
 
     private bool IsGrounded(){

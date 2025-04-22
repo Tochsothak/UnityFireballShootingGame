@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 6052773950608602542}
   - component: {fileID: 6889247597676051466}
   - component: {fileID: 6398794901600302781}
+  - component: {fileID: 4796022332948199579}
   m_Layer: 11
   m_Name: Player
   m_TagString: Player
@@ -218,7 +219,10 @@ MonoBehaviour:
     m_Bits: 544
   moveSpeed: 9.48
   jumpForce: 26
-  horizontalInput: 0
+  coyoteTime: 0.25
+  extraJumps: 1
+  wallJumpX: 1500
+  wallJumpY: 750
   jumpSound: {fileID: 8300000, guid: db039020c671da040b8d1dff4d9afc25, type: 3}
 --- !u!95 &6052773950608602542
 Animator:
@@ -288,3 +292,16 @@ MonoBehaviour:
   - {fileID: 4673050056327917944}
   deathSound: {fileID: 0}
   hurtSound: {fileID: 8300000, guid: b24ce9e710d6f7a41811afbb3d8d602a, type: 3}
+--- !u!114 &4796022332948199579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1616697795620036898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1abe84269c6d8a047be44d481e682770, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkPointSound: {fileID: 8300000, guid: 362d35077812d584f919bbed74bc1323, type: 3}
