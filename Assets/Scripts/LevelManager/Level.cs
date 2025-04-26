@@ -10,9 +10,12 @@ public class Level : MonoBehaviour
         {
           // Get the current scence index
           int currenrScenceIndex = SceneManager.GetActiveScene().buildIndex;
-
           // Load the next scence
-          SceneManager.LoadScene(currenrScenceIndex +1);
+          int nextScenseIndex =  currenrScenceIndex + 1;
+          if (nextScenseIndex >= SceneManager.sceneCountInBuildSettings){
+            nextScenseIndex = 0;
+          }
+          SceneManager.LoadScene(nextScenseIndex);
         }
     }
 }
