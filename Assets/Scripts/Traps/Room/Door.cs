@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RoomDoor : MonoBehaviour
+public class Door : MonoBehaviour
 {
     [SerializeField]private Transform previousRoom;
     [SerializeField]private Transform nextRoom;

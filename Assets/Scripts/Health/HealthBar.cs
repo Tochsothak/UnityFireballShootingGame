@@ -9,12 +9,12 @@ public class HealthBar : MonoBehaviour
     [SerializeField]private UnityEngine.UI.Image currentHealthBar;
 
     private void Start() {
-        totalHealthBar.fillAmount = playerHealth.currentHealth / 10;
+        totalHealthBar.fillAmount = playerHealth.currentHealth / 3;
         
     }
 
     private void Update() {
-        currentHealthBar.fillAmount = playerHealth.currentHealth / 10;
+        currentHealthBar.fillAmount = playerHealth.currentHealth / 3;
     }
 
 }

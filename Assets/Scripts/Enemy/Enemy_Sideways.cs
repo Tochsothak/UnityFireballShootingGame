@@ -14,15 +14,15 @@ public class Enemy_Sideways : MonoBehaviour
    private float rightEdge;
 
    private void  Awake () {
-    leftEdge = transform.position.x - movementDistance;
-    rightEdge = transform.position.x + movementDistance;
+    leftEdge = transform.position.y - movementDistance;
+    rightEdge = transform.position.y + movementDistance;
    }
 
    private void Update () {
     if (movingLeft) {
-        if (transform.position.x > leftEdge){
-            transform.position = new Vector3(transform.position.x - speed * Time.deltaTime,
-             transform.position.y, transform.position.z);
+        if (transform.position.y > leftEdge){
+            transform.position = new Vector3(transform.position.x,
+             transform.position.y - speed * Time.deltaTime, transform.position.z);
 
         } 
         else {
@@ -30,9 +30,9 @@ public class Enemy_Sideways : MonoBehaviour
         }
     }
     else {
-        if ( transform.position.x < rightEdge) {
-               transform.position = new Vector3(transform.position.x + speed * Time.deltaTime,
-             transform.position.y, transform.position.z);
+        if ( transform.position.y < rightEdge) {
+               transform.position = new Vector3(transform.position.x,
+             transform.position.y + speed * Time.deltaTime, transform.position.z);
 
 
         }
